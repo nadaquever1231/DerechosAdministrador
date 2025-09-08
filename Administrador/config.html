@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuración de Documentos</title>
+  <style>
+    body { font-family: sans-serif; background:#f5f5f5; margin:0; padding:20px; }
+    h1 { color:#0072C6; }
+    form { background:#fff; padding:20px; border-radius:10px; max-width:500px; }
+    input { width:100%; padding:10px; margin-bottom:12px; }
+    button { background:#0072C6; color:#fff; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; }
+    button:hover { background:#005999; }
+    .lista { margin-top:20px; }
+    .item { background:#fff; padding:10px; margin-bottom:8px; border-left:4px solid #0072C6; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <h1>⚙️ Configuración de Documentos</h1>
+  <form id="formConfig">
+    <input type="text" id="nombre" placeholder="Nombre visible (ej: Constitución Política...)" required>
+    <input type="text" id="archivo" placeholder="Nombre del archivo (ej: constitucion.json)" required>
+    <button type="submit">➕ Agregar Documento</button>
+  </form>
+
+  <div class="lista" id="listaDocs"></div>
+
+  <script>
+    const form = document.getElementById("formConfig");
+    const listaDocs = document.getElementById("listaDocs");
+    let documentos = [];
+
+    // Cargar index.json
+    async function cargarConfig() {
+      try {
+        const res = await fetch("datos/index.json");
+        if (!res.ok) throw new Error("No existe index.json aún");
+        documentos = await res.json();
+      } catch {
+        documentos = [];
+      }
+      mostrarLista();
+    }
+
+    function mostrarLista() {
+      listaDocs.innerHTML = "";
+      documentos.forEach((doc, i) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <strong>${i+1}. ${doc.nombre}</strong><br>
+          <small>${doc.archivo}</small>
+        `;
+        listaDocs.appendChild(div);
+      });
+    }
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value.trim();
+      const archivo = document.getElementById("archivo").value.trim();
+
+      documentos.push({ nombre, archivo });
+      guardarConfig();
+      form.reset();
+      mostrarLista();
+    });
+
+    function guardarConfig() {
+      const blob = new Blob([JSON.stringify(documentos, null, 2)], { type:"application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "index.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    cargarConfig();
+  </script>
+</body>
+</html>

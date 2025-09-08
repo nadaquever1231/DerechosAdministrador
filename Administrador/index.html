@@ -187,14 +187,7 @@ select:focus {
           <input type="text" id="id" placeholder="ID" required>
           <input type="text" id="titulo" placeholder="Título" required>
           <select id="categoria" required>
-            <option value="">Selecciona una categoría</option>
-            <option value="ID1">1.Constitución Política de Colombia 1991</option>
-            <option value="ID2">2.Declaración Universal de Derechos Humanos 1948</option>
-            <option value="ID3">3.Pacto Internacional de Derechos Civiles y Políticos 1966</option>
-            <option value="ID4">4.Pacto Internacional de Derechos Económicos, Sociales y Culturales 1966</option>
-            <option value="ID5">5.Declaración Americana de los Derechos y Deberes del Hombre 1948</option>
-            <option value="ID6">6.Convención Americana sobre Derechos Humanos 1969</option>
-            <option value="ID7">7.Protocolo Adicional a la Convención Americana en materia de Derechos Económicos, Sociales y Culturales 1988</option>
+          
           </select>
         </div>
         <div class="col-derecha">
@@ -207,28 +200,14 @@ select:focus {
   <div class="container">
     <h3>Exportar una sola categoría</h3>
     <select id="exportarCategoria">
-      <option value="">Selecciona una categoría</option>
-      <option value="1.Constitución Política de Colombia 1991">1.Constitución Política de Colombia 1991</option>
-      <option value="2.Declaración Universal de Derechos Humanos 1948">2.Declaración Universal de Derechos Humanos 1948</option>
-      <option value="3.Pacto Internacional de Derechos Civiles y Políticos 1966">3.Pacto Internacional de Derechos Civiles y Políticos 1966</option>
-      <option value="4.Pacto Internacional de Derechos Económicos, Sociales y Culturales 1966">4.Pacto Internacional de Derechos Económicos, Sociales y Culturales 1966</option>
-      <option value="5.Declaración Americana de los Derechos y Deberes del Hombre 1948">5.Declaración Americana de los Derechos y Deberes del Hombre 1948</option>
-      <option value="6.Convención Americana sobre Derechos Humanos 1969">6.Convención Americana sobre Derechos Humanos 1969</option>
-      <option value="7.Protocolo Adicional a la Convención Americana en materia de Derechos Económicos, Sociales y Culturales 1988">7.Protocolo Adicional a la Convención Americana en materia de Derechos Económicos, Sociales y Culturales 1988</option>
+    
     </select>
     <button onclick="exportarCategoriaSeleccionada()">Exportar categoría seleccionada</button>
 
 
     <h3>Filtrar visualización por categoría</h3>
     <select id="filtroCategoria" onchange="mostrarDatos()">
-      <option value="">Todas las categorías</option>
-      <option value="1.Constitución Política de Colombia 1991">1.Constitución Política de Colombia 1991</option>
-      <option value="2.Declaración Universal de Derechos Humanos 1948">2.Declaración Universal de Derechos Humanos 1948</option>
-      <option value="3.Pacto Internacional de Derechos Civiles y Políticos 1966">3.Pacto Internacional de Derechos Civiles y Políticos 1966</option>
-      <option value="4.Pacto Internacional de Derechos Económicos, Sociales y Culturales 1966">4.Pacto Internacional de Derechos Económicos, Sociales y Culturales 1966</option>
-      <option value="5.Declaración Americana de los Derechos y Deberes del Hombre 1948">5.Declaración Americana de los Derechos y Deberes del Hombre 1948</option>
-      <option value="6.Convención Americana sobre Derechos Humanos 1969">6.Convención Americana sobre Derechos Humanos 1969</option>
-      <option value="7.Protocolo Adicional a la Convención Americana en materia de Derechos Económicos, Sociales y Culturales 1988">7.Protocolo Adicional a la Convención Americana en materia de Derechos Económicos, Sociales y Culturales 1988</option>
+
     </select>
 
     
@@ -238,43 +217,58 @@ select:focus {
   <script>
     let datos = [];
 
-    const textosCategoria = {
-      ID1: "1.Constitución Política de Colombia 1991",
-      ID2: "2.Declaración Universal de Derechos Humanos 1948",
-      ID3: "3.Pacto Internacional de Derechos Civiles y Políticos 1966",
-      ID4: "4.Pacto Internacional de Derechos Económicos, Sociales y Culturales 1966",
-      ID5: "5.Declaración Americana de los Derechos y Deberes del Hombre 1948",
-      ID6: "6.Convención Americana sobre Derechos Humanos 1969",
-      ID7: "7.Protocolo Adicional a la Convención Americana en materia de Derechos Económicos, Sociales y Culturales 1988"
-    };
+    let documentos = [];
 
-    const archivosJSON = [
-      "1.constitucion_politica_de_colombia_1991.json",
-      "2.declaracion_universal_de_derechos_humanos_1948.json",
-      "3.pacto_internacional_de_derechos_civiles_y_politicos_1966.json",
-      "4.pacto_internacional_de_derechos_economicos_sociales_y_culturales_1966.json",
-      "5.declaracion_americana_de_los_derechos_y_deberes_del_hombre_1948.json",
-      "6.convencion_americana_sobre_derechos_humanos_1969.json",
-      "7.protocolo_adicional_a_la_convencion_americana_en_materia_de_derechos_economicos_sociales_y_culturales_1988.json"
-    ];
+    // Cargar index.json con la lista de documentos y poblar selects
+    async function cargarConfig() {
+      try {
+        const res = await fetch("datos/index.json");
+        documentos = await res.json();
+
+        const selectCat = document.getElementById("categoria");
+        const filtroCat = document.getElementById("filtroCategoria");
+        const exportarCat = document.getElementById("exportarCategoria");
+
+        // Reiniciar opciones
+        selectCat.innerHTML = `<option value="">Selecciona una categoría</option>`;
+        filtroCat.innerHTML = `<option value="">Todas las categorías</option>`;
+        exportarCat.innerHTML = `<option value="">Selecciona una categoría</option>`;
+
+        documentos.forEach((doc, i) => {
+          // Mostrar nombre con número, y usar ese mismo texto como value (igual al campo categoria de los JSON)
+          const nombreConNumero = `${i + 1}.${doc.nombre}`;
+          selectCat.add(new Option(nombreConNumero, nombreConNumero));
+          filtroCat.add(new Option(nombreConNumero, nombreConNumero));
+          exportarCat.add(new Option(nombreConNumero, nombreConNumero));
+        });
+
+
+        // Cargar todos los JSON listados en index.json
+        cargarTodosLosJSON();
+      } catch (e) {
+        console.error("Error cargando index.json", e);
+      }
+    }
+
 
     const form = document.getElementById('formulario');
     const lista = document.getElementById('lista');
 
     async function cargarTodosLosJSON() {
       let todosLosDatos = [];
-      for (const archivo of archivosJSON) {
+      for (const doc of documentos) {
         try {
-          const res = await fetch(`datos/${archivo}`);
+          const res = await fetch(`datos/${doc.archivo}`);
           const contenido = await res.json();
           todosLosDatos = todosLosDatos.concat(contenido);
         } catch (e) {
-          console.warn(`No se pudo cargar ${archivo}`, e);
+          console.warn(`No se pudo cargar ${doc.archivo}`, e);
         }
       }
       datos = todosLosDatos;
       mostrarDatos();
     }
+
 
     function mostrarDatos() {
       const filtro = document.getElementById("filtroCategoria")?.value || "";
@@ -307,14 +301,13 @@ select:focus {
       document.getElementById('id').value = item.id;
       document.getElementById('titulo').value = item.titulo;
       document.getElementById('descripcion').value = item.descripcion;
-
-      const clave = Object.keys(textosCategoria).find(k => textosCategoria[k] === item.categoria);
-      document.getElementById('categoria').value = clave || "";
+      document.getElementById('categoria').value = item.categoria;
 
       datos.splice(index, 1);
       mostrarDatos();
       form.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+
 
     function eliminarPorId(id, categoria) {
       if (!confirm("¿Eliminar este registro?")) return;
@@ -327,8 +320,7 @@ select:focus {
     }
 
     document.getElementById("categoria").addEventListener("change", () => {
-      const categoriaClave = document.getElementById("categoria").value;
-      const categoriaTexto = textosCategoria[categoriaClave];
+      const categoriaTexto = document.getElementById("categoria").value;
 
       // Filtrar artículos con esa categoría
       const articulosCategoria = datos.filter(item => item.categoria === categoriaTexto);
@@ -345,36 +337,14 @@ select:focus {
       // Sugerir el siguiente
       document.getElementById("id").placeholder = `Sugerido: ${maxId + 1}`;
     });
-
-
-    function editar(index) {
-      const item = datos[index];
-      document.getElementById('id').value = item.id;
-      document.getElementById('titulo').value = item.titulo;
-      document.getElementById('descripcion').value = item.descripcion;
-
-      const clave = Object.keys(textosCategoria).find(k => textosCategoria[k] === item.categoria);
-      document.getElementById('categoria').value = clave || "";
-
-      datos.splice(index, 1);
-      mostrarDatos();
-      form.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    function eliminar(index) {
-      if (confirm("¿Eliminar este registro?")) {
-        datos.splice(index, 1);
-        mostrarDatos();
-      }
-    }
+    
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const id = document.getElementById('id').value.trim();
       const titulo = document.getElementById('titulo').value.trim();
       const descripcion = document.getElementById('descripcion').value.trim();
-      const categoriaClave = document.getElementById('categoria').value;
-      const categoriaTexto = textosCategoria[categoriaClave] || "";
+      const categoriaTexto = document.getElementById('categoria').value;
 
       // Verificar si ya existe el mismo ID en la misma categoría
       const idsEnCategoria = datos
@@ -390,12 +360,12 @@ select:focus {
 
       datos.push({ id, titulo, descripcion, categoria: categoriaTexto });
 
-      // Ordenar por ID para mantener consistencia
+      // Ordenar por ID
       datos.sort((a, b) => parseInt(a.id) - parseInt(b.id));
       form.reset();
       mostrarDatos();
-
     });
+
 
     function descargarJSON() {
       const categorias = {};
@@ -441,38 +411,40 @@ select:focus {
       });
     }
 
+    async function cargarTodosLosJSON() {
+      let todosLosDatos = [];
+      for (const doc of documentos) {
+        try {
+          const res = await fetch(`datos/${doc.archivo}`);
+          const contenido = await res.json();
+          todosLosDatos = todosLosDatos.concat(contenido);
+        } catch (e) {
+          console.warn(`No se pudo cargar ${doc.archivo}`, e);
+        }
+      }
+      datos = todosLosDatos;
+      mostrarDatos();
+    }
 
-
-    cargarTodosLosJSON();
     function exportarCategoriaSeleccionada() {
-      const categoriaSeleccionada = document.getElementById("exportarCategoria").value;
-      if (!categoriaSeleccionada) {
+      const categoria = document.getElementById("exportarCategoria").value;
+      if (!categoria) {
         alert("Selecciona una categoría primero");
         return;
       }
 
-      const datosFiltrados = datos.filter(item => item.categoria === categoriaSeleccionada);
-
-      if (datosFiltrados.length === 0) {
-        alert("No hay datos para esta categoría.");
+      const datosCategoria = datos.filter(item => item.categoria === categoria);
+      if (datosCategoria.length === 0) {
+        alert("No hay datos en esta categoría");
         return;
       }
 
-      const datosNumerados = datosFiltrados.map((item, idx) => ({
-        ...item,
-        titulo: item.titulo.replace(/^\d+\.\s*/, '')
-      }));
-
-      const blob = new Blob([JSON.stringify(datosNumerados, null, 2)], { type: "application/json" });
-
-      // Mantener el número al inicio (antes del punto)
-      const nombreLimpio = categoriaSeleccionada
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quitar tildes
-        .replace(/\s+/g, "_") // espacios por guión bajo
-        .replace(/[^a-zA-Z0-9_.]/g, "") // conservar puntos
-        .toLowerCase();
-
-      const nombreArchivo = `${nombreLimpio}.json`;
+      const blob = new Blob([JSON.stringify(datosCategoria, null, 2)], { type: "application/json" });
+      const nombreArchivo = categoria
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, "_")
+        .replace(/[^a-zA-Z0-9_.]/g, "")
+        .toLowerCase() + ".json";
 
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -483,6 +455,7 @@ select:focus {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
+cargarConfig();
 
 
   </script>

@@ -1,9 +1,38 @@
 [
-  "1.constitucion_politica_de_colombia_1991.json",
-  "2.declaracion_universal_de_derechos_humanos_1948.json",
-  "3.pacto_internacional_de_derechos_civiles_y_politicos_1966.json",
-  "4.pacto_internacional_de_derechos_economicos_sociales_y_culturales_1966.json",
-  "5.declaracion_americana_de_los_derechos_y_deberes_del_hombre_1948.json",
-  "6.convencion_americana_sobre_derechos_humanos_1969.json",
-  "7.protocolo_adicional_a_la_convencion_americana_en_materia_de_derechos_economicos_sociales_y_culturales_1988.json"
+  {
+    "nombre": "Constitución Política de Colombia 1991",
+    "archivo": "1.constitucion_politica_de_colombia_1991.json"
+  },
+  {
+    "nombre": "Declaración Universal de Derechos Humanos 1948",
+    "archivo": "2.declaracion_universal_de_derechos_humanos_1948.json"
+  },
+  {
+    "nombre": "Pacto Internacional de Derechos Civiles y Políticos 1966",
+    "archivo": "3.pacto_internacional_de_derechos_civiles_y_politicos_1966.json"
+  },
+  {
+    "nombre": "Pacto Internacional de Derechos Económicos, Sociales y Culturales 1966",
+    "archivo": "4.pacto_internacional_de_derechos_economicos_sociales_y_culturales_1966.json"
+  },
+  {
+    "nombre": "Declaración Americana de los Derechos y Deberes del Hombre 1948",
+    "archivo": "5.declaracion_americana_de_los_derechos_y_deberes_del_hombre_1948.json"
+  },
+  {
+    "nombre": "Convención Americana sobre Derechos Humanos 1969",
+    "archivo": "6.convencion_americana_sobre_derechos_humanos_1969.json"
+  },
+  {
+    "nombre": "Protocolo Adicional a la Convención Americana en materia de Derechos Económicos, Sociales y Culturales 1988",
+    "archivo": "7.protocolo_adicional_a_la_convencion_americana_en_materia_de_derechos_economicos_sociales_y_culturales_1988.json"
+  },
+  {
+    "nombre": "Convención sobre la Eliminación de todas las formas de Discriminación contra la Mujer 1979",
+    "archivo": "8.convencion_sobre_la_eliminacion_de_todas_las_formas_de_discriminacion_contra_la_mujer_1979.json"
+  },
+  {
+    "nombre": "Convención Interamericana para Prevenir, Sancionar y Erradicar la Violencia contra la Mujer, “Convención de Belém do Pará” 1994",
+    "archivo": "9.convencion_interamericana_para_prevenir_sancionar_y_erradicar_la_violencia_contra_la_mujer_Convencion_de_belem_do_para_1994.json"
+  }
 ]
